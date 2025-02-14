@@ -1,4 +1,4 @@
-[![Open in Gitpod](https://img.shields.io/badge/Open_in-Gitpod-white?logo=gitpod)]( https://gitpod.io/new/#https://github.com/Vara-Lab/Sails-Smart-Contract-Builder-Template.git)
+[![Open in Gitpod](https://img.shields.io/badge/Open_in-Gitpod-white?logo=gitpod)]( https://gitpod.io/new/#https://github.com/A-mont/Items-Contract-Integration.git)
 
 
 # Items Smart Program
@@ -8,7 +8,7 @@
 ## Step 1: Open Contract on Gitpod
 
 <p align="center">
-  <a href="https://gitpod.io/#https://github.com/A-mont/Items-Smart-Program.git" target="_blank">
+  <a href="https://github.com/A-mont/Items-Contract-Integration.git" target="_blank">
     <img src="https://gitpod.io/button/open-in-gitpod.svg" width="240" alt="Gitpod">
   </a>
 </p>
