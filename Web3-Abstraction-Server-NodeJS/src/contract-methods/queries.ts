@@ -1,18 +1,31 @@
-// import { Sails } from "sails-js";
+import { Sails } from "sails-js";
 
-// export const queryTrafficLight = (sails: Sails, userAddress: string): Promise<any> => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             const response = await sails
-//                 .services // function to get services
-//                 .TrafficLight // Service selected (TrafficLight)
-//                 .queries // Get the queries from the service (queries - no changes state)
-//                 .TrafficLight(userAddress); // Query selected from the service
+export const allItemsQuery = (sails: Sails): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await sails
+                .services
+                .TouryItems
+                .queries
+                .AllItemsQuery();
+            resolve(response);
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
 
-//             // Return the response
-//             resolve(response);
-//         } catch(e) {
-//             reject(e);
-//         }
-//     });
-// }
+export const itemByIdQuery = (sails: Sails, itemId: number): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await sails
+                .services
+                .TouryItems
+                .queries
+                .ItemByIdQuery(itemId);
+            resolve(response);
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
