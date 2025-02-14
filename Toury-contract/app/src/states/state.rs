@@ -22,7 +22,9 @@ pub struct State {
 #[codec(crate = sails_rs::scale_codec)]
 #[scale_info(crate = sails_rs::scale_info)]
 pub struct Item {
-    pub data: String,
+    pub name: String,
+    pub description: String,
+    pub image:String
 }
 
 impl State {
