@@ -6,62 +6,75 @@ export const INITIAL_VOUCHER_TOKENS: number = 2;
 export const NETWORK: string = 'wss://testnet.vara.network'
 export const SPONSOR_NAME: string = 'admindavid';
 export const SPONSOR_MNEMONIC: string = 'strong orchard plastic arena pyramid lobster lonely rich stomach label clog rubber';
-export const CONTRACT_ID: HexString = '0x17cf40e9dfde5ede9fd4c7314a25a63cb989751f8e3e3dd0d29c01baf31c6da6';
+export const CONTRACT_ID: HexString = '0x7134e6bedb37c585a9939cc407bedeb9cf1d048310395bc061eafe920af415ef';
 export const IDL: string = `
-    type KeyringData = struct {
-      address: str,
-      encoded: str,
-    };
+    type Item = struct {
+  name: str,
+  description: str,
+  image: str,
+};
 
-    type KeyringEvent = enum {
-      KeyringAccountSet,
-      Error: KeyringError,
-    };
+type Events = enum {
+  ItemAdded: u64,
+  ItemRemoved: u64,
+  ItemModified: u64,
+  ItemIdAlreadyExists: u64,
+  ItemIdNotFound: u64,
+};
 
-    type KeyringError = enum {
-      KeyringAddressAlreadyEsists,
-      UserAddressAlreadyExists,
-      UserCodedNameAlreadyExists,
-      UserDoesNotHasKeyringAccount,
-      KeyringAccountAlreadyExists,
-      SessionHasInvalidCredentials,
-      UserAndKeyringAddressAreTheSame,
-    };
+type IoState = struct {
+  total_items: u128,
+  all_items: vec Item,
+  item_registry_by_id: vec struct { u64, Item },
+  actor_id_registry_by_item: vec struct { u64, actor_id },
+  admins: vec actor_id,
+};
 
-    type KeyringQueryEvent = enum {
-      LastWhoCall: actor_id,
-      SignlessAccountAddress: opt actor_id,
-      SignlessAccountData: opt KeyringData,
-    };
+type KeyringData = struct {
+  address: str,
+  encoded: str,
+};
 
-    type TrafficLightEvent = enum {
-      Green,
-      Yellow,
-      Red,
-      KeyringError: KeyringError,
-    };
+type KeyringEvent = enum {
+  KeyringAccountSet,
+  Error: KeyringError,
+};
 
-    type IoTrafficLightState = struct {
-      current_light: str,
-      all_users: vec struct { actor_id, str },
-    };
+type KeyringError = enum {
+  KeyringAddressAlreadyEsists,
+  UserAddressAlreadyExists,
+  UserCodedNameAlreadyExists,
+  UserDoesNotHasKeyringAccount,
+  KeyringAccountAlreadyExists,
+  SessionHasInvalidCredentials,
+  UserAndKeyringAddressAreTheSame,
+};
 
-    constructor {
-      New : ();
-    };
+type KeyringQueryEvent = enum {
+  LastWhoCall: actor_id,
+  SignlessAccountAddress: opt actor_id,
+  SignlessAccountData: opt KeyringData,
+};
 
-    service Keyring {
-      BindKeyringDataToUserAddress : (user_address: actor_id, keyring_data: KeyringData) -> KeyringEvent;
-      BindKeyringDataToUserCodedName : (user_coded_name: str, keyring_data: KeyringData) -> KeyringEvent;
-      query KeyringAccountData : (keyring_address: actor_id) -> KeyringQueryEvent;
-      query KeyringAddressFromUserAddress : (user_address: actor_id) -> KeyringQueryEvent;
-      query KeyringAddressFromUserCodedName : (user_coded_name: str) -> KeyringQueryEvent;
-    };
+constructor {
+  New : ();
+};
 
-    service TrafficLight {
-      Green : (user_coded_name: str) -> TrafficLightEvent;
-      Red : (user_coded_name: str) -> TrafficLightEvent;
-      Yellow : (user_coded_name: str) -> TrafficLightEvent;
-      query TrafficLight : () -> IoTrafficLightState;
-    };
+service Items {
+  AddItemService : (item_id: u64, item: Item, actor_id: actor_id) -> Events;
+  ModifyItemService : (item_id: u64, new_item: Item) -> Events;
+  RemoveItemService : (item_id: u64) -> Events;
+  query AllItemsQuery : () -> vec Item;
+  query ItemByIdQuery : (item_id: u64) -> opt Item;
+  query Query : () -> IoState;
+  query TotalItemsQuery : () -> u128;
+};
+
+service Signless {
+  BindKeyringDataToUserAddress : (user_address: actor_id, keyring_data: KeyringData) -> KeyringEvent;
+  BindKeyringDataToUserCodedName : (user_coded_name: str, keyring_data: KeyringData) -> KeyringEvent;
+  query KeyringAccountData : (keyring_address: actor_id) -> KeyringQueryEvent;
+  query KeyringAddressFromUserAddress : (user_address: actor_id) -> KeyringQueryEvent;
+  query KeyringAddressFromUserCodedName : (user_coded_name: str) -> KeyringQueryEvent;
+};
 `;
